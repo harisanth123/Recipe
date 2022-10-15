@@ -20,23 +20,23 @@
                     
                     {% csrf_token %}
                     <!-- <input placeholder="Ingrediants Needed" class="input1" type="text"> -->
-                    <table class="styled-table">
+                    <table class="styled-table" id="tabid">
                         <thead>
                             <tr>
+                                <th style="width: 50px;">Step No</th>
                                 <th style="width: 400px;">Step</th>
                                 <th style="width: 100px;">Time</th>
-                                <th style="width: 50px;">Step No</th>
                             </tr>
                         </thead>
                         <tbody id="table_body">
                             
                             <tr>
-                                <td><input class="input2" placeholder="Step" type="text" name="instruction"></td>
-                                <td><input class="input2" placeholder="Time" type="text" name="time_stamp"></td>
-                                <td><input class="input2" placeholder="Step no" type="number" name="seq_no"></td>
+                                <td><input class="input2" placeholder="Step no" type="number" id="seq_no"></td>
+                                <td><input class="input2" placeholder="Step" type="text" id="instruction"></td>
+                                <td><input class="input2" placeholder="Time" type="text" id="time_stamp"></td>
                                 <td><button type="button" class="button-88" onclick="addStep('table_body')">Add Step</button></td>
                                 <td><button type="button" class="button-89" onclick="removeStep(this)">Delete Step</td>
-                                <td><input value="{{ id.id }}" name="r_id" readonly ></td>   
+                                <td><input value="{{ id.id }}" id="r_id" readonly ></td>   
                             </tr>
                             
                         </tbody>
@@ -51,19 +51,43 @@
     </div>
 
     <script type="text/javascript">
-
+       
         
+        (document).ready(function(){
+            $('tabid').submit(function(){
+            var table = document.getElementById("tabid");
+            for(var i=1;i<table.rows.length;i++)
+            {
+                var seq_no = table.rows[i].cells[0].firstChild.value;
+                var instruction = table.rows[i].cells[1].firstChild.value;
+                var time_stamp = table.rows[i].cells[2].firstChild.value;
+                var r_id = table.rows[i].cells[3].firstChild.value;
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/addrecipeinstruction/",
+                    data1: { "seq_no":seq_no, "instructon":instruction, "time_stamp":time_stamp, "r_id":r_id },
+                });
+                    
+
+            }
+            });
+            
+        });
 
         function addStep(table_id){
             let table_body = document.getElementById(table_id),
-                first_tr = table_body.firstElementChild
+                first_tr = table_body.lastElementChild
                 tr_clone = first_tr.cloneNode(true);
+                
 
+
+            
             table_body.append(tr_clone);
-            clean_first_tr(table_body.firstElementChild);
+            clean_first_tr(table_body.lastElementChild);
         }
 
-        function clean_first_tr(firstTr){
+    function clean_first_tr(firstTr){
             let children = firstTr.children;
             children = Array.isArray(children)?children : Object.values(children);
             children.forEach(x => {

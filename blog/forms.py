@@ -11,10 +11,6 @@ class RecipeCreationForm(forms.ModelForm):
         fields = ['name']
 
 class RecipeInstructionForms(forms.ModelForm):
-    r_id = forms.IntegerField()
-    time_stamp = forms.CharField()
-    seq_no = forms.IntegerField()
-    instruction = forms.CharField(max_length=200)
     class Meta:
         model =  RecipeInstruction
         fields = ['r_id','time_stamp','seq_no','instruction'] 

@@ -111,11 +111,14 @@ def getRecipeInstruction(request):
     return Response(serializer.data)
 
 # @api_view(['POST'])
-# def addRecipeInstruction(request):
-    # serializer =InstructionSerializer(data=request.data)
-    # if serializer.is_valid():
-    #     serializer.save()
+def addRecipeInstruction(request):
+    serializer =InstructionSerializer(data=request.data1)
+    if serializer.is_valid():
+        serializer.save()
+    return render(request, 'blog/post_form.html')
+
     # return Response(serializer.data)
+    
     # if request.method == "POST":
     #     Instructions = formset_factory(RecipeInstructionForms,extra=1)
     #     formset =  Instructions(request.POST)
@@ -127,8 +130,6 @@ def getRecipeInstruction(request):
     #     form = RecipeInstructionForms()
     #     return render(request, 'blog/post_form.html', {'form': form })
     # else:
-    #     form = RecipeInstructionForms()
-    #     return render(request, 'blog/post_form.html', {'form': form})
 
 @api_view(['GET'])
 def play(request):
@@ -143,16 +144,12 @@ def play(request):
     return render(request,"index.html",context)
 
 
-def addRecipeInstruction(request):
-    form = RecipeInstructionForms(request.POST)
-    if request.method == 'POST':
-        print(form)
-        if form.is_valid():
-            f = form.save(commit=False)
-            value = request.POST.get('id')
-            instance = Recipe.objects.get(id=value)
-            f.r_id = instance
-            f.save()
-        else:
-            print(form.errors)
-    return render(request,'blog/post_form.html',{'form':form})
+# def addRecipeInstruction(request):
+#     form = RecipeInstructionForms(request.POST)
+#     if request.method == 'POST':
+#         print(form)
+#         if form.is_valid():
+#             form.save()
+#         else:
+#             print(form.errors)
+#     return render(request,'blog/post_form.html',{'form':form})
