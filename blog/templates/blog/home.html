@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+
+<br><br><br>
+  <div class="row">
+      <div class="col-md-8 offset-2">
+          <form>
+              <div class="input-group">
+                  <input name="q" type="text" placeholder="Search" class="form-control form-control-lg" />
+                  <div class="input-group-append">
+                      <button class="btn btn-dark btn-lg">Search</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+  <br><br><br><br><br>
+    {% for posts in posts %}
+        <article class="media content-section">
+            <img class="rounded-cirlce article-img" src="{{ posts.author.profile.image.url }}" alt="">
+            <div class="media-body">
+              <div class="article-metadata">
+                <a class="mr-2" href="#">{{ posts.author }}</a>
+                <small class="text-muted">{{ posts.date_posted }}</small>
+              </div>
+              <h2><a class="article-title" href="{% url 'blog-detail' posts.id %}">{{ posts.title }}</a></h2>
+            </div>
+            <br>
+          </article>
+    {% endfor  %}
+{% endblock content %}

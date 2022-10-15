@@ -1,0 +1,59 @@
+Database
+ Table 1 
+------------------------
+| r_id | r_name |
+------------------------
+
+Table 2
+--------------------------------------------
+| r_id | seq_no | timestamp | instruction
+--------------------------------------------
+
+Recipe Playback Module - Backend
+
+REST API - 
+1. https://www.youtube.com/watch?v=cJveiktaOSQ
+2. https://stackabuse.com/creating-a-rest-api-with-django-rest-framework/
+
+ play(r_id) :
+ 1. Fetch all records from Table 2 with given r_id .
+
+https://www.w3schools.com/django/django_queryset_filter.php
+
+2. Using text to speech, convert all instructions in sequence into temporary mp3 files, named seq_no.mp3.
+
+ • To support multiuser realtime interactions, also take user id as parameter, and name temporary files as u_id-r_id-seq_no.mp3.
+
+https://www.google.com/amp/s/www.geeksforgeeks.org/convert-text-speech-python/amp/
+
+3. Concatenate the temporary mp3 files in sequence, by adding corresponding delays between the audio files.
+
+ delay = curr_timestamp - prev_timestamp 
+
+Adding silence (delay) -https://stackoverflow.com/questions/23692261/generating-silence-with-pydub
+
+Merging audio - http://pydub.com/
+
+4. Return the concatenated mp3 file to client.
+
+**********
+
+ forward(r_id, pos) :
+
+ 1. Fetch all records from Table 2 with given r_id .
+ 
+2. Loop through timestamps in sequence, break loop when curr_timestamp > pos.
+
+3. Return  curr_timestamp in seconds
+
+(Frontend - To seek to returned timestamp : https://www.w3schools.com/tags/av_prop_currenttime.asp)
+
+**********
+
+backward(r_id, pos) :
+
+ 1. Fetch all records from Table 2 with given r_id .
+ 
+2. Loop through timestamps in sequence,  break loop when curr_timestamp > pos. During each iteration, store prev_timestamp = curr_timestamp.
+
+3. Return prev_timestamp in seconds.

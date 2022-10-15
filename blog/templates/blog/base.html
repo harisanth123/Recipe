@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'blog/main.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: #000000;">
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="nav-link active" aria-current="page" href="{% url 'blog-about' %}" style="font-size: 210%; font-family: fantasy; color: #fff;">Reci-Pie</a>
+          <buttwon class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </buttwon>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+              <a class="nav-item nav-link" href="{% url 'blog-home' %}">HOME</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              <!-- <a class="nav-item nav-link" href="#">Login</a>
+              <a class="nav-item nav-link" href="#">Register</a> -->
+              <!-- <button class="noselect">Create Post</button> -->
+<!--                <h3 style="color: white;">Hello {{request.user}}</h3>-->
+                <a href="{% url 'blog-new' %}" id="auth-links">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Create Post
+            </a>
+                
+                <a href="{% url 'profile' %}" id="auth-links">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Profile 
+            </a>
+                <a href="{% url 'logout' %}" id="auth-links">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Logout 
+            </a>
+                {% else %}
+              <a href="{% url 'login' %}" style="padding-right: 20px; width: 180px;">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <button id="auth-links" style="border-radius: 15px;">LOGIN</button>
+            </a>
+            <a href="{% url 'register' %}"style="padding-right: 20px; width: 180px;">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <button id="auth-links" style="border-radius: 15px;">REGISTER</button>
+            </a>
+            <!-- <a href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Neon button
+            </a> -->
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      
+          <div  style="width: 100%;">
+              {%  if messages%}
+                {% for message in messages %}
+                    <div class="alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+              {% endif %}
+          </div>
+        <div  style="width: 75%;">
+           {% block content %}{% endblock %}
+        </div>
+        
+      
+
+
+        <footer class="" >
+          <ul class="nav justify-content-center border-bottom"  style="margin-top: 60px;">
+          </ul>
+          <p class="text-center text-white"><a href="http://127.0.0.1:8000/admin/login/?next=/admin/" style="color: #fff">&copy;</a> Maammen Technologies 2022</p>
+        </footer>
+
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div class="content-section" style="background-image: linear-gradient(to right, #000000, #203E50);color: white; width: 100%;">
+        <!-- <form action="" class="grp" method="post"> -->
+            {% csrf_token %}
+            <fieldset>
+                <legend class="border-bottom mb-4">New Post</legend>
+                <!-- {{ form|crispy }} -->
+                <form action="/addrecipeinfo/" method="post">
+                    {% csrf_token %}
+                    <input placeholder="Name of the post" name="name" class="input1" value="{{name}}">
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Next</button>
+                    </div>
+                </form>
+                <form action="/addrecipeinstruction/" method="post">
+                    
+                    {% csrf_token %}
+                    <!-- <input placeholder="Ingrediants Needed" class="input1" type="text"> -->
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 400px;">Step</th>
+                                <th style="width: 100px;">Time</th>
+                                <th style="width: 50px;">Step No</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_body">
+                            
+                            <tr>
+                                <td><input class="input2" placeholder="Step" type="text" name="instruction"></td>
+                                <td><input class="input2" placeholder="Time" type="text" name="time_stamp"></td>
+                                <td><input class="input2" placeholder="Step no" type="number" name="seq_no"></td>
+                                <td><button type="button" class="button-88" onclick="addStep('table_body')">Add Step</button></td>
+                                <td><button type="button" class="button-89" onclick="removeStep(this)">Delete Step</td>
+                                <td><input value="{{ id.id }}" name="r_id" readonly ></td>   
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Post</button>
+                    </div>
+                </form>
+            </fieldset>
+            
+        <!-- </form> -->
+    </div>
+
+    <script type="text/javascript">
+
+        
+
+        function addStep(table_id){
+            let table_body = document.getElementById(table_id),
+                first_tr = table_body.firstElementChild
+                tr_clone = first_tr.cloneNode(true);
+
+            table_body.append(tr_clone);
+            clean_first_tr(table_body.firstElementChild);
+        }
+
+        function clean_first_tr(firstTr){
+            let children = firstTr.children;
+            children = Array.isArray(children)?children : Object.values(children);
+            children.forEach(x => {
+                if(x !==firstTr.lastElementChild){
+                    x.firstElementChild.value = '';
+                }
+            });
+        }
+
+        function removeStep(This){
+            if(This.closest('tbody').childElementCount == 1)
+            {
+                alert("Cant delete this step");
+            }
+            else{
+                This.closest('tr').remove();
+            }
+            
+        }
+    
+          
+    </script>
+
+    <style>
+        .button-88 {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 0.7em 1.4em 0.7em 1.1em;
+            color: rgb(4, 4, 4);
+            background: #ad5389;
+            background: linear-gradient(0deg, rgba(20,167,62,1) 0%, rgba(102,247,113,1) 100%);
+            border: none;
+            box-shadow: 0 0.7em 1.5em -0.5em #14a73e98;
+            letter-spacing: 0.05em;
+            border-radius: 20em;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-88:hover {
+            box-shadow: 0 0.5em 1.5em -0.5em #14a73e98;
+        }
+
+        .button-88:active {
+            box-shadow: 0 0.3em 1em -0.5em #14a73e98;
+        }
+
+        .button-89 {
+            height: 50px;
+            display: flex;
+            align-items: relative;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 0.7em 1.4em 0.7em 1.1em;
+            color: rgb(4, 4, 4);
+            background: #ad5389;
+            background: linear-gradient(0deg, rgb(239, 62, 3) 0%, rgb(252, 1, 1) 100%);
+            border: none;
+            box-shadow: 0 0.7em 1.5em -0.5em #e64d0c98;
+            letter-spacing: 0.05em;
+            border-radius: 20em;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .button-89:hover {
+            box-shadow: 0 0.5em 1.5em -0.5em #f8301a98;
+        }
+
+        .button-89:active {
+            box-shadow: 0 0.3em 1em -0.5em #f8301a98;
+        }
+        .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+            
+        }
+        .styled-table th,
+        .styled-table td {
+            padding: 10px 5px;
+        }
+        .styled-table tbody tr {
+            border-bottom: 1px solid #b09c9c;
+        }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #5f5e5e;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #dec804;
+        }
+        .input1{
+            box-shadow: inset #abacaf 0 0 0 2px;
+                    border: 0;
+                    background: rgba(175, 221, 225, 0.568);
+                    appearance: none;
+                    width: 50%;
+                    margin-bottom: 10px;
+                    position: relative;
+                    border-radius: 3px;
+                    padding: 9px 12px;
+                    line-height: 1.4;
+                    color: rgb(0, 0, 0);
+                    font-size: 16px;
+                    font-weight: 400;
+                    height: 40px;
+                    transition: all .2s ease;
+                    }
+                    
+                    :focus{
+                        background: #fff;
+                        outline: 0;
+                        box-shadow: 0 0 0 0 #fff inset, #1de9b6 0 0 0 3px;
+                    }
+                
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: rgb(255, 255, 255);
+            opacity: 1; /* Firefox */
+        }
+
+        .input2{
+            box-shadow: inset #abacaf 0 0 0 2px;
+                    border: 0;
+                    background: rgba(175, 221, 225, 0.568);
+                    appearance: none;
+                    width: 100%;
+                    height: 50px;
+                    margin-bottom: 10px;
+                    position: relative;
+                    border-radius: 3px;
+                    line-height: 1.4;
+                    color: rgb(0, 0, 0);
+                    font-size: 16px;
+                    font-weight: 400;
+                    transition: all .2s ease;
+                    }
+                    
+                    :focus{
+                        background: #fff;
+                        outline: 0;
+                        box-shadow: 0 0 0 0 #fff inset, #1de9b6 0 0 0 3px;
+                    }
+                
+        ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: rgb(255, 255, 255);
+            opacity: 1; /* Firefox */
+        }
+    
+    </style>
+
+{% endblock content %}
+
