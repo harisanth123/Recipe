@@ -1,4 +1,9 @@
+from ast import keyword
+from dis import Instruction
+from multiprocessing import context
 from tkinter.tix import Form
+from unittest import result
+from urllib import request
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Post
@@ -11,10 +16,12 @@ from services.google import converter
 from .serializers import InstructionSerializer, RecipeSerializer
 from .models import Recipe
 from .models import RecipeInstruction
+import json
 
-from .forms import RecipeInstructionForms,RecipeCreationForm
+from .forms import RecipeCreationForm
 
-from django.forms import formset_factory
+from django.contrib.auth.models import User
+
 
 
 def home(request):
@@ -30,14 +37,15 @@ def about(request):
 
 
 class PostListView(LoginRequiredMixin, ListView):
-    model = Post
+    model = Recipe
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ["-date_posted"]
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):
-    model = Post
+    model = RecipeInstruction
+    template_name = 'blog/post_detail.html'
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -71,7 +79,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class PostDeleteView(DeleteView):
-    model = Post
+    model = Recipe
     success_url = '/'
 
     def test_func(self):
@@ -91,15 +99,12 @@ def getRecipeInfo(request):
 def addRecipeInfo(request):
     if request.method == "POST":
         form = RecipeCreationForm(request.POST)
-        print(form)
         if form.is_valid():
-            recipe = form.save()
-            id = recipe.id
-            dict1={'id':id}        
-            form = RecipeInstructionForms() 
-            # Instructions = formset_factory(RecipeInstructionForms,extra=1)
-            # formset =  Instructions()
-            return render(request, 'blog/post_form.html', {'form': form, 'id':recipe, 'name':recipe.name})
+            recipe = form.save(commit=False)
+            recipe.author = request.user
+            recipe.save()
+            id = recipe.id            
+            return render(request, 'blog/post_form.html', {'id':id, 'name':recipe.name})
     else:
         form = RecipeCreationForm()
     return render(request, 'blog/post_form.html', {'form': form,'name':''})
@@ -110,46 +115,42 @@ def getRecipeInstruction(request):
     serializer = InstructionSerializer(instructions,many = True)
     return Response(serializer.data)
 
-# @api_view(['POST'])
+
 def addRecipeInstruction(request):
-    serializer =InstructionSerializer(data=request.data1)
-    if serializer.is_valid():
-        serializer.save()
+    if request.method == "POST":
+        requestData=json.loads(request.body.decode('UTF-8'))
+        recipe = Recipe.objects.get(id=requestData["r_id"])
+        requestData["r_id"] = recipe
+        instruction = RecipeInstruction(**requestData)
+        instruction.save()
+        return redirect("")
     return render(request, 'blog/post_form.html')
 
-    # return Response(serializer.data)
-    
-    # if request.method == "POST":
-    #     Instructions = formset_factory(RecipeInstructionForms,extra=1)
-    #     formset =  Instructions(request.POST)
-    #     print(formset)
-        
-    #     if formset.is_valid():
-    #         for form in formset:
-    #             form.save()
-    #     form = RecipeInstructionForms()
-    #     return render(request, 'blog/post_form.html', {'form': form })
-    # else:
 
-@api_view(['GET'])
-def play(request):
-    r_idvalue= request.GET.get('r_id',None)
-    v_data = RecipeInstruction.objects.filter(r_id=r_idvalue)
+def search(request):
+    keyword = request.GET.get("keyword")
+    posts = Recipe.objects.filter(name__icontains=keyword)
+    print(posts)
+    context = {"posts":posts, "keyword":keyword}
+    return render(request,'blog/home.html',context)
+
+
+
+def play(request,r_id):
+    recipe = Recipe.objects.get(id=r_id)
+    v_data = RecipeInstruction.objects.filter(r_id=r_id)
     v_data = list(v_data)
     v_data.sort(key=lambda x: x.seq_no)
     filename=converter(v_data)
+    instructions  = RecipeInstruction.objects.all()
     # serializer = InstructionSerializer(v_data,many = True)
     # return Response(serializer.data)
-    context={"filepath":"/media/"+filename}
-    return render(request,"index.html",context)
+    context={"filepath":"/media/"+filename,"instructions":v_data, "recipe":recipe}
+    return render(request,"blog/play.html",context)
 
 
-# def addRecipeInstruction(request):
-#     form = RecipeInstructionForms(request.POST)
-#     if request.method == 'POST':
-#         print(form)
-#         if form.is_valid():
-#             form.save()
-#         else:
-#             print(form.errors)
-#     return render(request,'blog/post_form.html',{'form':form})
+def deleteRec(request,r_id):
+    RecipeInstruction.objects.filter(r_id=r_id).delete()
+    Recipe.objects.get(id=r_id).delete()
+    return redirect("/home/")
+

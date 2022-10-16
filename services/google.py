@@ -11,7 +11,7 @@ def converter(v_data,language = 'en'):
     
     second_of_silence = AudioSegment.silent(duration=1000) 
     recipe_voice = AudioSegment.from_mp3("media/"+str(v_data[0].r_id_id)+"1.mp3")
-
+    first_instruction = v_data[0]
     v_data=v_data[1:]
     for i in v_data:
         voice = AudioSegment.from_mp3("media/"+str(i.r_id_id)+str(i.seq_no)+".mp3")
@@ -19,5 +19,5 @@ def converter(v_data,language = 'en'):
         milisec=(hours*3600+min*60+sec)*1000
         silence = AudioSegment.silent(duration=milisec)
         recipe_voice += silence+voice 
-    recipe_voice.export("media/recpie"+str(v_data[0].r_id_id)+".mp3")
-    return "recpie"+str(v_data[0].r_id_id)+".mp3"
+    recipe_voice.export("media/recpie"+str(first_instruction.r_id_id)+".mp3")
+    return "recpie"+str(first_instruction.r_id_id)+".mp3"

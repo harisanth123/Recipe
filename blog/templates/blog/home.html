@@ -4,9 +4,9 @@
 <br><br><br>
   <div class="row">
       <div class="col-md-8 offset-2">
-          <form>
+          <form action="/search/">
               <div class="input-group">
-                  <input name="q" type="text" placeholder="Search" class="form-control form-control-lg" />
+                  <input name="keyword" value="{{keyword}}" type="text" placeholder="Search" class="form-control form-control-lg" />
                   <div class="input-group-append">
                       <button class="btn btn-dark btn-lg">Search</button>
                   </div>
@@ -23,7 +23,7 @@
                 <a class="mr-2" href="#">{{ posts.author }}</a>
                 <small class="text-muted">{{ posts.date_posted }}</small>
               </div>
-              <h2><a class="article-title" href="{% url 'blog-detail' posts.id %}">{{ posts.title }}</a></h2>
+              <h2><a class="article-title" href="{% url 'playss' posts.id %}">{{ posts.name }}</a></h2>
             </div>
             <br>
           </article>

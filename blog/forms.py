@@ -9,8 +9,3 @@ class RecipeCreationForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['name']
-
-class RecipeInstructionForms(forms.ModelForm):
-    class Meta:
-        model =  RecipeInstruction
-        fields = ['r_id','time_stamp','seq_no','instruction'] 

@@ -15,9 +15,13 @@
                     </div>
                   {% endif %}
               </div>
-              <h2><a class="article-title" href="#">{{ object.title }}</a></h2>
-              <p class="article-content">{{ object.content }}</p>
+              <h2><a class="article-title" href="#">{{ object.name }}</a></h2>
+              <p class="article-content">{{ object.instruction }}</p>
+              <div>
+                <button>Play recipe</button>
+              </div>
             </div>
+            
             <br>
           </article>
 {% endblock content %}

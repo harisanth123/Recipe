@@ -5,8 +5,7 @@
 {% block content %}
     <div class="content-section" style="background-image: linear-gradient(to right, #000000, #203E50);color: white; width: 100%;">
         <!-- <form action="" class="grp" method="post"> -->
-            {% csrf_token %}
-            <fieldset>
+            
                 <legend class="border-bottom mb-4">New Post</legend>
                 <!-- {{ form|crispy }} -->
                 <form action="/addrecipeinfo/" method="post">
@@ -16,14 +15,13 @@
                         <button class="btn btn-outline-info" type="submit">Next</button>
                     </div>
                 </form>
-                <form action="/addrecipeinstruction/" method="post">
-                    
+                <form action="/addrecipeinstruction/" method="post" id="instructionForm">  
                     {% csrf_token %}
                     <!-- <input placeholder="Ingrediants Needed" class="input1" type="text"> -->
+                    <input type="hidden" value="{{ id }}" id="r_id" readonly>
                     <table class="styled-table" id="tabid">
                         <thead>
                             <tr>
-                                <th style="width: 50px;">Step No</th>
                                 <th style="width: 400px;">Step</th>
                                 <th style="width: 100px;">Time</th>
                             </tr>
@@ -31,58 +29,54 @@
                         <tbody id="table_body">
                             
                             <tr>
-                                <td><input class="input2" placeholder="Step no" type="number" id="seq_no"></td>
-                                <td><input class="input2" placeholder="Step" type="text" id="instruction"></td>
-                                <td><input class="input2" placeholder="Time" type="text" id="time_stamp"></td>
+                                <td><input class="input2" placeholder="Step" type="text" name="instruction"></td>
+                                <td><input class="input2" placeholder="Time" type="text" name="time_stamp"></td>
                                 <td><button type="button" class="button-88" onclick="addStep('table_body')">Add Step</button></td>
-                                <td><button type="button" class="button-89" onclick="removeStep(this)">Delete Step</td>
-                                <td><input value="{{ id.id }}" id="r_id" readonly ></td>   
+                                <td><button type="button" class="button-89" onclick="removeStep(this)">Delete Step</td>   
                             </tr>
                             
                         </tbody>
                     </table>
                     <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Post</button>
+                        <button class="btn btn-outline-info">Post</button>
                     </div>
                 </form>
-            </fieldset>
             
         <!-- </form> -->
     </div>
-
     <script type="text/javascript">
-       
-        
-        (document).ready(function(){
-            $('tabid').submit(function(){
+        $("#instructionForm").submit(function(e) {
+            e.preventDefault();
             var table = document.getElementById("tabid");
+            var r_id = document.getElementById("r_id").value;
             for(var i=1;i<table.rows.length;i++)
             {
-                var seq_no = table.rows[i].cells[0].firstChild.value;
-                var instruction = table.rows[i].cells[1].firstChild.value;
-                var time_stamp = table.rows[i].cells[2].firstChild.value;
-                var r_id = table.rows[i].cells[3].firstChild.value;
+                var seq_no = i;
+                var instruction = table.rows[i].cells[0].firstChild.value;
+                var time_stamp = table.rows[i].cells[1].firstChild.value;
+                var datadict = { "seq_no":seq_no, "instruction":instruction, "time_stamp":time_stamp, "r_id":r_id }
+                console.log(datadict);
+                let cookie = document.cookie;
+                let csrfToken = cookie.substring(cookie.indexOf('=') + 1);
+                
                 $.ajax({
-                    type: "POST",
+                    method: "POST",
+                    dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     url: "/addrecipeinstruction/",
-                    data1: { "seq_no":seq_no, "instructon":instruction, "time_stamp":time_stamp, "r_id":r_id },
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    data: JSON.stringify(datadict)
                 });
-                    
-
+                 
             }
-            });
-            
         });
 
         function addStep(table_id){
             let table_body = document.getElementById(table_id),
                 first_tr = table_body.lastElementChild
                 tr_clone = first_tr.cloneNode(true);
-                
-
-
-            
             table_body.append(tr_clone);
             clean_first_tr(table_body.lastElementChild);
         }
@@ -258,4 +252,3 @@
     </style>
 
 {% endblock content %}
-
