@@ -12,7 +12,7 @@
       <div class="m-b-25"> <img class="rounded-circle account-img" id="profile-img" src="{{ user.profile.image.url }}" class="img-radius" alt="User-Profile-Image"> </div>
 
       <h1 id="profile-h1">{{user.username|title}}</h1>
-      <p class="title">{{user.email}}</p>
+      <p class="title" style="color: white;">{{user.email}}</p>
       <!-- <p>My Social Live  Below</p> -->
       <a href="#" id="auth-links"><i class="fa fa-dribbble"></i></a>
       <a href="#" id="auth-links"><i class="fa fa-twitter"></i></a>
@@ -31,7 +31,7 @@
 <!--            </div>-->
         </form>
 
-      <p><button id="btn-profile"><a href="{% url 'profile-update' %}" id="auth-links">
+      <p><button id="btn-profile" style="background-color: tomato;"><a href="{% url 'profile-update' %}" id="auth-links" style="background-color: tomato;">
         <span></span>
         <span></span>
         <span></span>

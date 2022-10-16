@@ -54,19 +54,19 @@
                 Logout 
             </a>
                 {% else %}
-              <a href="{% url 'login' %}" style="padding-right: 20px; width: 180px;">
+              <a href="{% url 'login' %}" style="padding-left: 100px;" id="auth-links">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                <button id="auth-links" style="border-radius: 15px;">LOGIN</button>
+                LOGIN
             </a>
-            <a href="{% url 'register' %}"style="padding-right: 20px; width: 180px;">
+            <a href="{% url 'register' %}" style="padding-left: 50px;" id="auth-links">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                <button id="auth-links" style="border-radius: 15px;">REGISTER</button>
+                REGISTER
             </a>
             <!-- <a href="#">
                 <span></span>
@@ -92,7 +92,7 @@
                 {% endfor %}
               {% endif %}
           </div>
-        <div  style="width: 75%;">
+        <div  style="width: 75%;justify-content: center;">
            {% block content %}{% endblock %}
         </div>
         
